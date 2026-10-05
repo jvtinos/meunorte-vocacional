@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeuNorte — Mapa de Interesses Acadêmicos</title>
+<style>
+:root{--bg:#f5f7fb;--surface:#fff;--surface2:#eef3f7;--text:#132231;--muted:#6b7a88;--line:#dce5ed;--brand:#173b57;--brand2:#2f7196;--accent:#f2b84b;--success:#2e7d5b;--shadow:0 22px 55px rgba(20,45,65,.10);--radius:24px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 86% 4%,rgba(47,113,150,.12),transparent 28%),radial-gradient(circle at 9% 95%,rgba(242,184,75,.14),transparent 28%),var(--bg)}
+button{font:inherit}.shell{max-width:980px;margin:auto;padding:24px 16px 44px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:-.03em}.logo{width:44px;height:44px;border-radius:14px;background:var(--brand);display:grid;place-items:center;color:white;font-size:23px;box-shadow:0 8px 22px rgba(23,59,87,.20)}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.11em;text-transform:uppercase;margin-top:1px}.badge{font-size:12px;font-weight:850;padding:8px 11px;border-radius:999px;background:#e8f1f7;border:1px solid #d3e5f1;color:var(--brand)}
+.card{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(24px,4vw,44px)}.hidden{display:none!important}.kicker{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--brand2)}h1{font-size:clamp(38px,7vw,64px);line-height:.98;letter-spacing:-.055em;margin:14px 0 18px;max-width:790px}h2{font-size:clamp(28px,4vw,40px);line-height:1.08;letter-spacing:-.04em;margin:8px 0 12px}h3{font-size:20px;margin:0}p{color:var(--muted);line-height:1.62;margin:0}.lead{font-size:18px;max-width:760px}.pills{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0}.pill{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:13px;font-weight:800;color:#385062}
+.primary,.secondary{border:0;border-radius:15px;padding:14px 20px;font-weight:900;cursor:pointer;transition:.15s transform,.15s box-shadow,.15s opacity}.primary{background:var(--brand);color:#fff;box-shadow:0 10px 25px rgba(23,59,87,.20)}.primary:active,.secondary:active{transform:scale(.985)}.primary:disabled{opacity:.38;cursor:not-allowed;box-shadow:none}.secondary{background:#edf3f7;color:var(--brand)}.fine{font-size:12px;color:#8493a0;margin-top:16px;line-height:1.55}.instruction{margin-top:22px;padding:17px 18px;border-radius:17px;background:#fffaf0;border:1px solid #f3dfb7;color:#6a5320}.instruction b{color:#5a4314}
+.progressHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;font-size:13px;font-weight:850;color:var(--muted)}.track{height:9px;background:#e6edf2;border-radius:99px;overflow:hidden;margin-bottom:18px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:99px;transition:width .3s}.screenTag{font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--brand2);margin-bottom:11px}.questionTitle{font-size:clamp(25px,4vw,34px);font-weight:900;letter-spacing:-.035em;line-height:1.15;margin-bottom:8px}.questionSub{font-size:14px;color:var(--muted);margin-bottom:24px}.itemList{display:grid;gap:16px}.item{border:1px solid var(--line);border-radius:19px;padding:17px;background:#fff;transition:.15s border,.15s box-shadow}.item.answered{border-color:#a9c7d9;box-shadow:0 7px 18px rgba(36,90,122,.06)}.itemText{font-size:16px;font-weight:780;line-height:1.45;margin-bottom:14px}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.scale button{border:1px solid var(--line);background:#f8fafc;color:var(--text);border-radius:13px;padding:11px 4px;cursor:pointer;font-weight:900;min-height:45px}.scale button.selected{background:var(--brand);color:white;border-color:var(--brand)}.scaleLegend{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:11px;color:#82909c}.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:24px}
+.resultHeader{text-align:center;margin-bottom:25px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--success)}.topAreas{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}.areaCard{background:linear-gradient(145deg,#f8fbfd,#eef4f8);border:1px solid var(--line);border-radius:20px;padding:22px}.rank{width:36px;height:36px;border-radius:11px;background:var(--brand);color:white;display:grid;place-items:center;font-weight:900;margin-bottom:14px}.areaCard:nth-child(2) .rank{background:var(--brand2)}.areaCard p{font-size:14px;margin-top:8px}.areaMeta{margin-top:12px;font-size:12px;font-weight:850;color:#4c6475}.statusBox{padding:18px;border-radius:18px;margin:20px 0}.statusBox.strong{background:#edf8f3;border:1px solid #cfe9dc}.statusBox.balanced{background:#fff8e8;border:1px solid #f1dcaa}.statusBox.flat{background:#f3f6f8;border:1px solid var(--line)}.statusBox b{display:block;margin-bottom:5px}.ranking{margin-top:28px}.rankRows{display:grid;gap:11px;margin-top:15px}.rankRow{display:grid;grid-template-columns:165px 1fr 54px;gap:10px;align-items:center;font-size:13px}.rankLabel{font-weight:850}.miniTrack{height:10px;background:#e7edf1;border-radius:99px;overflow:hidden}.miniFill{height:100%;background:linear-gradient(90deg,#274f6d,#4f8fb4);border-radius:99px}.points{text-align:right;font-weight:900;color:var(--brand)}.explain{margin-top:26px;padding:18px;border-radius:18px;background:#fffaf0;border:1px solid #f3dfb7}.explain p{margin-top:6px}.debug{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}.debugGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:13px}.dbg{border:1px solid var(--line);background:#fafcfd;border-radius:13px;padding:11px;font-size:12px;color:var(--muted)}.dbg b{display:block;color:var(--text);font-size:14px;margin-bottom:3px}.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}.note{margin-top:26px;padding:16px 18px;border-radius:16px;background:#f3f6f8;border:1px solid var(--line);font-size:12px;line-height:1.58;color:#6f7f8b}footer{text-align:center;font-size:12px;color:#8997a2;margin-top:22px}
+@media(max-width:680px){.shell{padding:15px 11px 30px}.topbar{margin-bottom:17px}.badge{display:none}.card{border-radius:20px;padding:22px}.lead{font-size:16px}.scale{gap:6px}.scale button{padding:11px 2px}.topAreas{grid-template-columns:1fr}.rankRow{grid-template-columns:120px 1fr 48px}.debugGrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="topbar"><div class="brand"><div class="logo">🧭</div><div>MeuNorte<small>Mapa de Interesses Acadêmicos</small></div></div><div class="badge">Protótipo V3</div></div>
+
+<main id="intro" class="card">
+<div class="kicker">Descubra quais campos despertam mais o seu interesse</div>
+<h1>Para onde a sua curiosidade aponta?</h1>
+<p class="lead">Você vai avaliar pequenas atividades e temas de diferentes áreas. Não existe resposta certa. No final, o MeuNorte mostra os <b>dois campos acadêmicos que mais se destacaram</b>.</p>
+<div class="pills"><span class="pill">15 telas</span><span class="pill">45 avaliações rápidas</span><span class="pill">9 áreas acadêmicas</span><span class="pill">≈ 3–4 minutos</span></div>
+<div class="instruction"><b>Como responder:</b> imagine que você tivesse tempo e oportunidade para experimentar cada atividade. Não pense se você já sabe fazer, se seria difícil ou no salário. Marque apenas o quanto aquilo despertaria seu interesse.</div>
+<div style="margin-top:23px"><button id="startBtn" class="primary">Começar meu mapa</button></div>
+<p class="fine">Ferramenta de exploração de interesses acadêmicos. Não constitui avaliação psicológica, diagnóstico ou teste psicológico validado.</p>
+</main>
+
+<main id="quiz" class="hidden">
+<div class="progressHead"><span>Mapa de interesses</span><span id="progressText">1 de 15</span></div>
+<div class="track"><div id="progressFill" class="fill"></div></div>
+<section class="card">
+<div id="screenTag" class="screenTag">Tela 01</div>
+<div class="questionTitle">Quanto cada atividade despertaria seu interesse?</div>
+<div class="questionSub">Avalie cada uma separadamente. Você pode dar a mesma nota para mais de uma.</div>
+<div id="itemList" class="itemList"></div>
+<div class="nav"><button id="backBtn" class="secondary">Voltar</button><button id="nextBtn" class="primary" disabled>Próxima</button></div>
+</section>
+</main>
+
+<main id="result" class="card hidden">
+<div class="resultHeader"><div class="eyebrow">Seu mapa de interesses</div><h2>Dois campos se destacaram 🧭</h2><p>O resultado considera todas as avaliações, não uma resposta isolada.</p></div>
+<div id="statusBox" class="statusBox"></div>
+<div id="topAreas" class="topAreas"></div>
+<div id="explain" class="explain"></div>
+<section class="ranking"><h3>Ranking completo das 9 áreas</h3><p style="margin-top:5px">A pontuação é normalizada, então áreas que aparecem em uma atividade compartilhada não recebem vantagem injusta.</p><div id="rankRows" class="rankRows"></div></section>
+<div class="debug"><button id="debugBtn" class="secondary">Ver cálculo por área</button><div id="debugPanel" class="hidden"><div id="debugGrid" class="debugGrid"></div></div></div>
+<div class="actions"><button id="restartBtn" class="primary">Refazer teste</button></div>
+<div class="note"><b>Importante:</b> esta é uma versão de teste do MeuNorte. As perguntas e a interpretação dos resultados ainda precisam de pilotagem com estudantes antes de qualquer uso formal.</div>
+</main>
+<footer>MeuNorte · Protótipo acadêmico de exploração de interesses</footer>
+</div>
+
+<script>
+const AREA_INFO={
+TEC:{name:"Tecnologia e Computação",desc:"Interesse por sistemas digitais, computadores, automação, dados e criação de soluções com tecnologia."},
+ENG:{name:"Engenharias e Ciências Exatas",desc:"Interesse por números, medidas, materiais, construção, cálculos e funcionamento de coisas no mundo real."},
+SAU:{name:"Saúde e Bem-Estar",desc:"Interesse pelo corpo humano, saúde, cuidado, prevenção, recuperação e qualidade de vida."},
+BIO:{name:"Ciências Biológicas e Meio Ambiente",desc:"Interesse por seres vivos, células, natureza, meio ambiente e funcionamento da vida."},
+AGR:{name:"Ciências Agrárias, Alimentos e Produção",desc:"Interesse por plantas, animais, alimentos, produção, recursos naturais e sustentabilidade."},
+HUM:{name:"Humanas, Educação e Sociedade",desc:"Interesse por pessoas, aprendizagem, cultura, história, comportamento e vida em sociedade."},
+DIR:{name:"Direito, Política e Relações Internacionais",desc:"Interesse por leis, direitos, conflitos, decisões públicas, negociação e organização da sociedade."},
+COM:{name:"Comunicação, Artes e Design",desc:"Interesse por criação, imagens, textos, vídeos, design, expressão e formas de comunicar ideias."},
+NEG:{name:"Negócios, Gestão e Economia",desc:"Interesse por organização, estratégia, dinheiro, recursos, mercado, decisões e resultados."}
+};
+
+const SCREENS=[
+[
+{scores:{TEC:1},t:"Descobrir por que um aplicativo mostra conteúdos diferentes para cada pessoa."},
+{scores:{SAU:1},t:"Entender o que alguns sinais do corpo podem indicar sobre a saúde de uma pessoa."},
+{scores:{HUM:1},t:"Entender por que grupos diferentes podem pensar de formas diferentes sobre o mesmo assunto."}
+],
+[
+{scores:{ENG:1},t:"Descobrir como mudar o tamanho, o formato ou o material de algo pode fazer ele funcionar melhor."},
+{scores:{COM:1},t:"Transformar uma ideia difícil em uma imagem, vídeo, texto ou história fácil de entender."},
+{scores:{NEG:1},t:"Decidir como usar dinheiro, tempo ou outros recursos quando não dá para fazer tudo ao mesmo tempo."}
+],
+[
+{scores:{BIO:1},t:"Observar seres vivos ou ambientes para tentar entender alguma mudança que aconteceu."},
+{scores:{DIR:1},t:"Analisar uma discussão e entender quais direitos, regras e interesses estão envolvidos."},
+{scores:{AGR:1},t:"Descobrir como o solo, o clima e os cuidados com a produção podem mudar o resultado de uma plantação ou criação."}
+],
+[
+{scores:{TEC:1},t:"Encontrar uma forma de fazer uma tarefa repetitiva ser realizada automaticamente."},
+{scores:{COM:1,TEC:1},t:"Melhorar a aparência e a organização de um aplicativo, site ou outro projeto para deixá-lo mais fácil de usar."},
+{scores:{BIO:1},t:"Entender como uma mudança em uma célula, animal, planta ou ambiente pode causar outras mudanças."}
+],
+[
+{scores:{SAU:1},t:"Acompanhar informações sobre a saúde de uma pessoa e perceber quando algo importante mudou."},
+{scores:{NEG:1},t:"Analisar informações sobre gastos, vendas ou clientes para entender por que um resultado mudou."},
+{scores:{DIR:1},t:"Comparar duas opiniões diferentes e descobrir qual delas tem argumentos mais fortes."}
+],
+[
+{scores:{ENG:1},t:"Usar números e cálculos para tentar prever o que pode acontecer em uma situação."},
+{scores:{HUM:1},t:"Explicar um assunto difícil de um jeito que outra pessoa consiga realmente entender."},
+{scores:{AGR:1},t:"Pensar em formas de produzir alimentos ou outros produtos usando menos recursos e evitando desperdício."}
+],
+[
+{scores:{TEC:1},t:"Criar uma solução digital simples para organizar informações que estão espalhadas ou confusas."},
+{scores:{NEG:1},t:"Organizar pessoas, tarefas e prazos para fazer uma ideia sair do papel."},
+{scores:{AGR:1},t:"Descobrir por que uma plantação ou criação de animais não está se desenvolvendo como deveria."}
+],
+[
+{scores:{SAU:1},t:"Entender como hábitos, cuidados e tratamentos podem melhorar ou piorar a saúde de uma pessoa."},
+{scores:{COM:1},t:"Pensar em formas diferentes de contar a mesma história para públicos diferentes."},
+{scores:{ENG:1},t:"Testar materiais ou formatos diferentes até encontrar uma solução que funcione melhor."}
+],
+[
+{scores:{BIO:1},t:"Entender como uma mudança no ambiente pode afetar animais, plantas ou outros seres vivos."},
+{scores:{HUM:1},t:"Entender como a cultura, a história e o lugar onde uma pessoa vive podem influenciar seu jeito de pensar e agir."},
+{scores:{DIR:1},t:"Pensar em como uma decisão do governo ou da cidade pode afetar grupos diferentes de pessoas."}
+],
+[
+{scores:{TEC:1},t:"Descobrir por que um computador, aplicativo ou sistema começou a ficar lento ou apresentar problemas."},
+{scores:{DIR:1},t:"Tentar encontrar uma solução quando duas pessoas ou grupos querem coisas diferentes."},
+{scores:{ENG:1},t:"Usar desenhos, medidas ou cálculos para encontrar uma solução para um problema prático."}
+],
+[
+{scores:{SAU:1},t:"Ajudar uma pessoa a entender quais cuidados podem melhorar sua saúde ou recuperação."},
+{scores:{AGR:1},t:"Descobrir o que pode afetar a qualidade e a segurança de um alimento desde sua produção até chegar às pessoas."},
+{scores:{BIO:1},t:"Comparar informações para tentar explicar uma característica de um animal, planta ou outro ser vivo."}
+],
+[
+{scores:{COM:1},t:"Testar imagens, textos, sons ou formatos diferentes até encontrar a melhor forma de apresentar uma ideia."},
+{scores:{NEG:1},t:"Comparar maneiras diferentes de fazer algo e escolher a que parece ter mais chance de dar certo."},
+{scores:{HUM:1},t:"Criar uma atividade ou explicação para ajudar alguém a aprender um assunto difícil."}
+],
+[
+{scores:{TEC:1},t:"Entender como um computador pode usar informações para reconhecer padrões e dar respostas."},
+{scores:{ENG:1},t:"Pensar em como construir ou criar algo respeitando tamanho, peso, força e funcionamento."},
+{scores:{SAU:1},t:"Juntar sintomas, histórico e outras informações para tentar entender melhor um problema de saúde."}
+],
+[
+{scores:{BIO:1},t:"Estudar como algum processo da vida funciona, mesmo sem precisar usar esse conhecimento imediatamente."},
+{scores:{AGR:1},t:"Pensar em maneiras de melhorar a produção de plantas, animais ou alimentos sem prejudicar tanto o ambiente."},
+{scores:{HUM:1},t:"Entender como as pessoas aprendem, criam ideias e vivem em sociedade."}
+],
+[
+{scores:{DIR:1},t:"Analisar uma situação pensando nas leis, regras, direitos e interesses das pessoas envolvidas."},
+{scores:{COM:1},t:"Criar uma imagem, texto, vídeo ou outro conteúdo capaz de chamar a atenção e provocar alguma reação nas pessoas."},
+{scores:{NEG:1},t:"Escolher a melhor forma de agir pensando nos recursos disponíveis, nos riscos e nos resultados que podem acontecer."}
+]
+];
+
+let current=0,answers=Array.from({length:15},()=>[null,null,null]),shuffled=[];
+const $=id=>document.getElementById(id);
+$("startBtn").onclick=startTest;$("restartBtn").onclick=startTest;$("debugBtn").onclick=()=>$("debugPanel").classList.toggle("hidden");
+$("backBtn").onclick=()=>{if(current>0){current--;renderScreen();}};
+$("nextBtn").onclick=()=>{if(!isScreenComplete())return;if(current<14){current++;renderScreen();}else showResults();};
+
+function shuffle(items){const arr=items.map((x,i)=>({...x,_orig:i}));for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function startTest(){current=0;answers=Array.from({length:15},()=>[null,null,null]);shuffled=SCREENS.map(items=>shuffle(items));$("intro").classList.add("hidden");$("result").classList.add("hidden");$("quiz").classList.remove("hidden");$("debugPanel").classList.add("hidden");renderScreen();}
+function renderScreen(){$("screenTag").textContent="Tela "+String(current+1).padStart(2,"0");$("progressText").textContent=(current+1)+" de 15";$("progressFill").style.width=((current+1)/15*100)+"%";$("backBtn").style.visibility=current===0?"hidden":"visible";$("nextBtn").textContent=current===14?"Ver meu resultado":"Próxima";const list=$("itemList");list.innerHTML="";shuffled[current].forEach(item=>{const orig=item._orig,selected=answers[current][orig];const box=document.createElement("div");box.className="item"+(selected?" answered":"");box.innerHTML=`<div class="itemText">${item.t}</div><div class="scale">${[1,2,3,4,5].map(v=>`<button type="button" data-v="${v}" class="${selected===v?"selected":""}">${v}</button>`).join("")}</div><div class="scaleLegend"><span>Não me interessaria</span><span>Me interessaria muito</span></div>`;box.querySelectorAll(".scale button").forEach(btn=>{btn.onclick=()=>{answers[current][orig]=Number(btn.dataset.v);renderScreen();};});list.appendChild(box);});$("nextBtn").disabled=!isScreenComplete();window.scrollTo({top:0,behavior:"smooth"});}
+function isScreenComplete(){return answers[current].every(v=>Number.isInteger(v));}
+
+function calculateScores(){const sum={},weightSum={},details={};Object.keys(AREA_INFO).forEach(k=>{sum[k]=0;weightSum[k]=0;details[k]=[];});SCREENS.forEach((screen,si)=>{screen.forEach((item,oi)=>{const value=answers[si][oi];Object.entries(item.scores).forEach(([area,w])=>{sum[area]+=value*w;weightSum[area]+=w;details[area].push({value,weight:w,text:item.t});});});});const averages={},normalized={};Object.keys(AREA_INFO).forEach(k=>{averages[k]=sum[k]/weightSum[k];normalized[k]=((averages[k]-1)/4)*100;});return{sum,weightSum,averages,normalized,details};}
+function interpret(ranked){const a=ranked.map(x=>x[1]);const spread=Math.max(...a)-Math.min(...a),gap12=a[0]-a[1],gap23=a[1]-a[2];if(spread<12)return{cls:"flat",title:"Seu perfil ficou bastante distribuído.",text:"Você demonstrou níveis de interesse parecidos em várias áreas. O Top 2 abaixo é uma tendência leve, não uma conclusão definitiva."};if(gap12<4&&gap23<4)return{cls:"balanced",title:"Três áreas ficaram muito próximas.",text:"Você mostrou interesses fortes em mais de dois campos. Vale observar também a terceira área do ranking."};if(gap12<4||gap23<4)return{cls:"balanced",title:"Seus principais interesses ficaram próximos.",text:"Isso pode indicar um perfil mais interdisciplinar, com afinidade por áreas que se conectam."};return{cls:"strong",title:"Seu perfil mostrou uma direção mais clara.",text:"Essas áreas ficaram à frente das demais no conjunto das suas respostas e são um bom ponto de partida para explorar cursos."};}
+function showResults(){$("quiz").classList.add("hidden");$("result").classList.remove("hidden");const calc=calculateScores();const ranked=Object.entries(calc.normalized).sort((a,b)=>b[1]-a[1]);const top2=ranked.slice(0,2),status=interpret(ranked);$("statusBox").className="statusBox "+status.cls;$("statusBox").innerHTML=`<b>${status.title}</b><p>${status.text}</p>`;$("topAreas").innerHTML=top2.map(([code,score],i)=>`<article class="areaCard"><div class="rank">${i+1}º</div><h3>${AREA_INFO[code].name}</h3><p>${AREA_INFO[code].desc}</p><div class="areaMeta">Nível de interesse: ${score.toFixed(0)} / 100</div></article>`).join("");const [c1,s1]=top2[0],[c2,s2]=top2[1];$("explain").innerHTML=`<b>Como o resultado foi calculado?</b><p>Cada resposta vai de 1 a 5. Algumas atividades podem contribuir para mais de uma área quando isso fizer sentido. O sistema calcula a <b>média de interesse de cada área</b> e normaliza o resultado, evitando que uma área tenha vantagem apenas porque apareceu em mais atividades. Neste teste, <b>${AREA_INFO[c1].name}</b> e <b>${AREA_INFO[c2].name}</b> tiveram as maiores médias.</p>`;$("rankRows").innerHTML=ranked.map(([code,score])=>`<div class="rankRow"><div class="rankLabel">${AREA_INFO[code].name}</div><div class="miniTrack"><div class="miniFill" style="width:${score}%"></div></div><div class="points">${score.toFixed(0)}</div></div>`).join("");$("debugGrid").innerHTML=ranked.map(([code,score])=>{const vals=calc.details[code].map(x=>x.value).join(" · ");return `<div class="dbg"><b>${AREA_INFO[code].name}</b>Notas: ${vals}<br>Média: ${calc.averages[code].toFixed(2)}/5<br>Normalizado: ${score.toFixed(1)}/100</div>`;}).join("");window.scrollTo({top:0,behavior:"smooth"});}
+</script>
+</body>
+</html>
