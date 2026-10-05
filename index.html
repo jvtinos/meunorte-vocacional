@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeuNorte Vocacional — Protótipo</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --surface:#ffffff;
+      --surface-2:#eef3f8;
+      --text:#132231;
+      --muted:#677685;
+      --line:#dce5ed;
+      --brand:#173b57;
+      --brand-2:#2f7196;
+      --accent:#f2b84b;
+      --success:#2e7d5b;
+      --shadow:0 22px 55px rgba(20,45,65,.10);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 85% 5%, rgba(47,113,150,.10), transparent 28%),
+        radial-gradient(circle at 8% 95%, rgba(242,184,75,.13), transparent 27%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    button{font:inherit}
+    .shell{max-width:980px;margin:0 auto;padding:28px 20px 48px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:32px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.03em}
+    .logo{
+      width:44px;height:44px;border-radius:14px;background:var(--brand);
+      display:grid;place-items:center;color:white;box-shadow:0 8px 22px rgba(23,59,87,.20)
+    }
+    .logo svg{width:25px;height:25px}
+    .brand span small{display:block;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+    .badge{
+      font-size:12px;font-weight:800;color:var(--brand);background:#e8f1f7;border:1px solid #d3e5f1;
+      padding:8px 11px;border-radius:999px
+    }
+    .card{
+      background:rgba(255,255,255,.95);border:1px solid rgba(220,229,237,.92);
+      box-shadow:var(--shadow);border-radius:var(--radius);padding:clamp(24px,4vw,44px)
+    }
+    .hero{padding:clamp(28px,5vw,54px)}
+    .kicker{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--brand-2);font-weight:900}
+    h1{font-size:clamp(38px,7vw,66px);line-height:.97;letter-spacing:-.055em;margin:14px 0 18px;max-width:760px}
+    h2{font-size:clamp(27px,4vw,38px);letter-spacing:-.035em;line-height:1.08;margin:8px 0 12px}
+    h3{margin:0;font-size:19px}
+    p{line-height:1.65;color:var(--muted);margin:0}
+    .lead{font-size:18px;max-width:720px}
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:26px}
+    .pill-row{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0}
+    .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:13px;font-weight:750;color:#385062}
+    .primary,.secondary{
+      border:0;border-radius:15px;padding:14px 20px;font-weight:850;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s background
+    }
+    .primary{background:var(--brand);color:white;box-shadow:0 10px 25px rgba(23,59,87,.20)}
+    .primary:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(23,59,87,.25)}
+    .secondary{background:#edf3f7;color:var(--brand)}
+    .fine{font-size:12px;color:#8493a0;margin-top:18px;max-width:730px}
+    .hidden{display:none!important}
+    .progress-wrap{margin-bottom:20px}
+    .progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;font-size:13px;font-weight:800;color:var(--muted)}
+    .track{height:9px;background:#e6edf2;border-radius:99px;overflow:hidden}
+    .fill{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand-2));border-radius:99px;transition:width .35s ease}
+    .stage-chip{color:var(--brand-2);font-weight:900}
+    .question-card{min-height:500px;display:flex;flex-direction:column;justify-content:center}
+    .question-number{font-size:12px;color:var(--brand-2);text-transform:uppercase;letter-spacing:.12em;font-weight:900;margin-bottom:12px}
+    .question{font-size:clamp(25px,4vw,36px);font-weight:850;letter-spacing:-.035em;line-height:1.17;margin-bottom:28px}
+    .options{display:grid;gap:12px}
+    .option{
+      width:100%;text-align:left;border:1px solid var(--line);background:white;border-radius:18px;padding:18px 18px;
+      display:flex;gap:14px;align-items:flex-start;color:var(--text);cursor:pointer;font-weight:700;line-height:1.45;
+      transition:.15s border,.15s transform,.15s background,.15s box-shadow
+    }
+    .option:hover{transform:translateY(-1px);border-color:#9fc0d5;background:#f8fbfd;box-shadow:0 8px 22px rgba(18,53,76,.07)}
+    .letter{
+      flex:0 0 31px;height:31px;border-radius:10px;background:#eef3f7;color:var(--brand);display:grid;place-items:center;font-size:13px;font-weight:900
+    }
+    .transition-card{text-align:center;padding:62px 28px}
+    .transition-icon{font-size:52px;margin-bottom:14px}
+    .results-head{text-align:center;margin-bottom:30px}
+    .results-head .eyebrow{font-size:13px;color:var(--success);font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .top-areas{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:26px 0}
+    .area-card{
+      background:linear-gradient(145deg,#f8fbfd,#eef4f8);border:1px solid var(--line);border-radius:20px;padding:22px;
+      position:relative;overflow:hidden
+    }
+    .rank{
+      display:inline-grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--brand);color:white;font-weight:900;margin-bottom:15px
+    }
+    .area-card:nth-child(2) .rank{background:var(--brand-2)}
+    .area-card p{font-size:14px;margin-top:8px}
+    .why{margin-top:26px;background:#fffaf0;border:1px solid #f3dfb7;padding:20px;border-radius:18px}
+    .why strong{color:#664b19}
+    .profile{margin-top:30px}
+    .bars{display:grid;gap:13px;margin-top:16px}
+    .bar-row{display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:12px;font-size:13px}
+    .bar-row .label{font-weight:800}
+    .mini-track{height:10px;border-radius:99px;background:#e7edf1;overflow:hidden}
+    .mini-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#274f6d,#4f8fb4)}
+    .score{font-weight:900;color:var(--brand);text-align:right}
+    .debug{
+      margin-top:22px;border-top:1px solid var(--line);padding-top:20px
+    }
+    .debug-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+    .debug-item{border:1px solid var(--line);background:#fafcfd;padding:12px;border-radius:13px;font-size:12px;color:var(--muted)}
+    .debug-item b{display:block;color:var(--text);font-size:15px;margin-bottom:2px}
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+    .note{
+      margin-top:28px;padding:16px 18px;border-radius:16px;background:#f3f6f8;border:1px solid var(--line);font-size:12px;line-height:1.6;color:#6f7f8b
+    }
+    footer{text-align:center;color:#8795a1;font-size:12px;margin-top:24px}
+    @media(max-width:680px){
+      .shell{padding:18px 13px 30px}
+      .topbar{margin-bottom:18px}
+      .badge{display:none}
+      .card{border-radius:20px;padding:22px}
+      .hero{padding:28px 23px}
+      .lead{font-size:16px}
+      .question-card{min-height:530px}
+      .top-areas{grid-template-columns:1fr}
+      .bar-row{grid-template-columns:105px 1fr 38px;gap:8px}
+      .debug-grid{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M15.9 8.1 13.6 13.6 8.1 15.9 10.4 10.4 15.9 8.1Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <span>MeuNorte<small>Vocacional</small></span>
+    </div>
+    <div class="badge">Protótipo de validação</div>
+  </div>
+
+  <main id="intro" class="card hero">
+    <div class="hero-grid">
+      <div>
+        <div class="kicker">Descubra caminhos que combinam com você</div>
+        <h1>Qual pode ser o seu próximo norte?</h1>
+        <p class="lead">Responda situações rápidas sobre como você prefere explorar problemas, criar, organizar, agir e se relacionar. No final, o MeuNorte apresenta as <b>duas áreas acadêmicas</b> que mais conversam com o seu perfil de interesses.</p>
+        <div class="pill-row">
+          <div class="pill">15 respostas</div>
+          <div class="pill">≈ 2–3 minutos</div>
+          <div class="pill">3 perguntas adaptativas</div>
+          <div class="pill">Resultado com 2 áreas</div>
+        </div>
+        <button class="primary" id="startBtn">Começar meu mapa</button>
+        <p class="fine">Este protótipo é uma ferramenta de exploração de interesses inspirada no modelo RIASEC. Ele não constitui avaliação psicológica, diagnóstico ou teste psicológico validado.</p>
+      </div>
+    </div>
+  </main>
+
+  <main id="quiz" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-head">
+        <span id="stageText" class="stage-chip">Etapa 1 · Explorando preferências</span>
+        <span id="progressText">1 de 15</span>
+      </div>
+      <div class="track"><div id="progressFill" class="fill"></div></div>
+    </div>
+
+    <section class="card question-card">
+      <div id="questionNumber" class="question-number">Questão 01</div>
+      <div id="questionText" class="question"></div>
+      <div id="options" class="options"></div>
+    </section>
+  </main>
+
+  <main id="adaptiveIntro" class="card transition-card hidden">
+    <div class="transition-icon">🧭</div>
+    <div class="kicker">Agora ficou interessante</div>
+    <h2>Já encontramos seus interesses mais fortes.</h2>
+    <p>As próximas 3 perguntas mudam de acordo com suas respostas anteriores. Elas servem para diferenciar tendências que ficaram próximas entre si.</p>
+    <div class="actions"><button id="continueAdaptive" class="primary">Continuar</button></div>
+  </main>
+
+  <main id="result" class="card hidden">
+    <div class="results-head">
+      <div class="eyebrow">Seu mapa de interesses</div>
+      <h2>Dois caminhos se destacaram 🧭</h2>
+      <p>O resultado considera o conjunto das respostas, não uma pergunta isolada.</p>
+    </div>
+
+    <div id="topAreas" class="top-areas"></div>
+
+    <div id="whyBox" class="why"></div>
+
+    <section class="profile">
+      <h3>Seu perfil de interesses</h3>
+      <p style="margin-top:5px">As barras mostram a força <b>relativa</b> de cada tendência dentro das suas próprias respostas.</p>
+      <div id="profileBars" class="bars"></div>
+    </section>
+
+    <div class="debug">
+      <button id="debugBtn" class="secondary">Ver como o cálculo funcionou</button>
+      <div id="debugPanel" class="hidden">
+        <div id="debugGrid" class="debug-grid"></div>
+        <p class="fine">As 12 primeiras questões dão 1 ponto à tendência escolhida. As 3 adaptativas comparam apenas as três tendências mais fortes e acrescentam um pequeno bônus de desempate (0,35), evitando que essa etapa distorça o perfil inicial.</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="restartBtn" class="primary">Refazer teste</button>
+    </div>
+
+    <div class="note">
+      <b>Importante:</b> este é um protótipo de produto e de lógica. Antes de ser usado como instrumento de orientação real, as questões, pesos e associações entre interesses e áreas devem ser testados com usuários e revisados por profissional qualificado em orientação profissional/psicologia.
+    </div>
+  </main>
+
+  <footer>MeuNorte · Protótipo acadêmico de exploração vocacional</footer>
+</div>
+
+<script>
+const labels = {
+  R: "Realista",
+  I: "Investigativo",
+  A: "Artístico",
+  S: "Social",
+  E: "Empreendedor",
+  C: "Convencional"
+};
+
+const shortDescriptions = {
+  R: "agir, testar e construir",
+  I: "investigar, compreender e resolver",
+  A: "criar, imaginar e expressar",
+  S: "acolher, orientar e colaborar",
+  E: "mobilizar, decidir e influenciar",
+  C: "organizar, estruturar e planejar"
+};
+
+const fixedQuestions = [
+  {
+    q:"Algo que deveria funcionar começa a apresentar um comportamento estranho. O que mais desperta sua vontade de mexer nisso?",
+    options:[
+      ["Testar diferentes ajustes até descobrir o que faz funcionar melhor.","R"],
+      ["Observar o que está acontecendo e tentar descobrir a causa.","I"],
+      ["Imaginar uma maneira completamente diferente de aquilo funcionar.","A"]
+    ]
+  },
+  {
+    q:"Você entra em um grupo que vai realizar algo importante, mas ninguém se conhece direito. O que você provavelmente faria com mais naturalidade?",
+    options:[
+      ["Tentaria perceber quem está deslocado e fazer as pessoas se entenderem.","S"],
+      ["Começaria a movimentar o grupo para que as decisões acontecessem.","E"],
+      ["Tentaria deixar claro o que precisa ser feito, quando e por quem.","C"]
+    ]
+  },
+  {
+    q:"Um espaço usado por várias pessoas vai ser totalmente reformulado. Em qual parte você teria mais vontade de participar?",
+    options:[
+      ["Montar, testar e ajustar as coisas na prática.","R"],
+      ["Conversar com quem usa o espaço para entender suas necessidades.","S"],
+      ["Defender uma proposta e conseguir apoio para colocá-la em prática.","E"]
+    ]
+  },
+  {
+    q:"Você recebe várias informações soltas sobre um assunto que ainda não entende muito bem. Qual impulso aparece primeiro?",
+    options:[
+      ["Procurar relações entre elas até compreender o que está acontecendo.","I"],
+      ["Pensar em uma forma interessante e diferente de transformar aquilo em algo compreensível.","A"],
+      ["Separar tudo por categorias e colocar as informações em uma sequência lógica.","C"]
+    ]
+  },
+  {
+    q:"Você recebe poucos recursos e liberdade para criar algo do zero. Qual parte parece mais interessante?",
+    options:[
+      ["Fazer uma primeira versão concreta e testar se funciona.","R"],
+      ["Imaginar um conceito diferente do que normalmente seria feito.","A"],
+      ["Fazer outras pessoas acreditarem na ideia e quererem participar.","E"]
+    ]
+  },
+  {
+    q:"Uma pessoa pede sua ajuda porque um problema continua acontecendo e ela não sabe por quê. O que mais combina com você?",
+    options:[
+      ["Investigar o que está provocando o problema.","I"],
+      ["Acompanhar a pessoa e explicar até ela conseguir resolver sozinha.","S"],
+      ["Criar uma sequência clara para que o problema não volte a acontecer.","C"]
+    ]
+  },
+  {
+    q:"Imagine uma feira com várias experiências acontecendo. Você só pode escolher uma. Qual parece mais interessante?",
+    options:[
+      ["Uma atividade em que você precisa montar, testar e ajustar alguma coisa.","R"],
+      ["Um desafio em que precisa analisar pistas e chegar a uma explicação.","I"],
+      ["Uma experiência em que precisa entender pessoas e ajudá-las a chegar a uma solução.","S"]
+    ]
+  },
+  {
+    q:"Você tem dois dias para colocar uma ideia nova no mundo. Qual parte mais te anima?",
+    options:[
+      ["Criar o conceito, a identidade e a maneira como a ideia será apresentada.","A"],
+      ["Conseguir apoio, envolver pessoas e fazer a ideia ganhar força.","E"],
+      ["Organizar etapas, recursos e prazos para nada se perder no caminho.","C"]
+    ]
+  },
+  {
+    q:"Um grupo tem uma boa ideia, mas ela está parada há semanas. Qual dessas ações você teria mais vontade de assumir?",
+    options:[
+      ["Construir uma primeira versão para finalmente testar a ideia.","R"],
+      ["Fazer o grupo tomar decisões e transformar conversa em ação.","E"],
+      ["Mapear o que falta e estruturar os próximos passos.","C"]
+    ]
+  },
+  {
+    q:"Você precisa explorar um assunto sobre o qual existem opiniões muito diferentes. O que mais te atrairia?",
+    options:[
+      ["Pesquisar evidências para descobrir o que realmente sustenta cada ideia.","I"],
+      ["Criar uma maneira original de contar ou representar aquilo.","A"],
+      ["Conversar com pessoas diferentes para compreender suas experiências.","S"]
+    ]
+  },
+  {
+    q:"Você encontra um ambiente que funciona, mas é confuso e pouco prático. O que mais dá vontade de fazer?",
+    options:[
+      ["Mudar a disposição das coisas e testar uma configuração melhor.","R"],
+      ["Repensar toda a experiência para deixá-la mais agradável e interessante.","A"],
+      ["Criar um sistema para que cada coisa tenha seu lugar e seja fácil de encontrar.","C"]
+    ]
+  },
+  {
+    q:"Em uma discussão sobre um problema complicado, o que costuma prender mais a sua atenção?",
+    options:[
+      ["Descobrir quais argumentos realmente têm fundamento.","I"],
+      ["Entender por que cada pessoa pensa daquele jeito e buscar algum ponto em comum.","S"],
+      ["Defender uma direção e tentar levar o grupo até uma decisão.","E"]
+    ]
+  }
+];
+
+const adaptiveBank = {
+  "IR": {
+    q:"Você recebe uma caixa com um objeto desconhecido e nenhuma instrução. O que te prenderia mais?",
+    options:[
+      ["Abrir possibilidades de uso, testar peças e descobrir o que ele consegue fazer.","R"],
+      ["Observar padrões e tentar deduzir por que ele funciona daquele jeito.","I"]
+    ]
+  },
+  "AR": {
+    q:"Você pode melhorar um objeto comum. Qual caminho parece mais interessante?",
+    options:[
+      ["Modificar a forma física e experimentar versões até ficar mais funcional.","R"],
+      ["Reimaginar a experiência e dar a ele uma identidade completamente nova.","A"]
+    ]
+  },
+  "RS": {
+    q:"Em uma atividade comunitária, qual tarefa te deixaria mais envolvido?",
+    options:[
+      ["Colocar a estrutura para funcionar e resolver problemas concretos durante a execução.","R"],
+      ["Acompanhar as pessoas e garantir que elas consigam participar bem da experiência.","S"]
+    ]
+  },
+  "ER": {
+    q:"Uma ideia precisa sair do papel ainda hoje. O que você preferiria assumir?",
+    options:[
+      ["Ir para a prática e construir uma primeira solução utilizável.","R"],
+      ["Convencer o grupo de uma direção e acelerar a tomada de decisão.","E"]
+    ]
+  },
+  "CR": {
+    q:"Um espaço de trabalho está causando atrasos. O que mais te chama para agir?",
+    options:[
+      ["Testar mudanças físicas no espaço até o fluxo melhorar.","R"],
+      ["Redesenhar a organização das etapas para reduzir erros e esquecimentos.","C"]
+    ]
+  },
+  "AI": {
+    q:"Você encontra um assunto completamente novo e tem algumas horas livres para explorá-lo. O que provavelmente faria você esquecer do tempo?",
+    options:[
+      ["Ir cada vez mais fundo até entender como aquilo funciona.","I"],
+      ["Começar a imaginar algo novo que poderia criar a partir daquilo.","A"]
+    ]
+  },
+  "IS": {
+    q:"Quando alguém conta um problema complicado, qual curiosidade costuma aparecer primeiro?",
+    options:[
+      ["O que está causando isso e que evidências ajudam a explicar?","I"],
+      ["Como isso está afetando essa pessoa e o que ajudaria de verdade?","S"]
+    ]
+  },
+  "EI": {
+    q:"Um grupo está dividido sobre qual caminho seguir. O que mais te interessa fazer?",
+    options:[
+      ["Comparar dados e argumentos antes de concluir qual opção é mais consistente.","I"],
+      ["Construir apoio para uma direção e fazer o grupo avançar.","E"]
+    ]
+  },
+  "CI": {
+    q:"Você recebe um conjunto grande de informações incompletas. O que seria mais satisfatório?",
+    options:[
+      ["Investigar até encontrar a explicação por trás dos dados.","I"],
+      ["Criar uma estrutura clara para organizar tudo e acompanhar o que ainda falta.","C"]
+    ]
+  },
+  "AS": {
+    q:"Se você tivesse que contar a história de um grupo de pessoas, qual parte seria mais interessante?",
+    options:[
+      ["Encontrar uma maneira marcante e original de representar aquela história.","A"],
+      ["Conversar com elas e compreender suas experiências de verdade.","S"]
+    ]
+  },
+  "AE": {
+    q:"Você tem uma ideia incomum e quer fazê-la ganhar espaço. Qual etapa te anima mais?",
+    options:[
+      ["Desenvolver a proposta até ela ter uma linguagem própria e memorável.","A"],
+      ["Apresentar a ideia, conquistar adesão e criar oportunidades para ela crescer.","E"]
+    ]
+  },
+  "AC": {
+    q:"Um projeto criativo está ficando confuso. O que você mais gostaria de fazer?",
+    options:[
+      ["Experimentar novas formas e encontrar uma solução com personalidade.","A"],
+      ["Criar um método para organizar versões, tarefas e entregas.","C"]
+    ]
+  },
+  "ES": {
+    q:"Um grupo precisa mudar um hábito que não está funcionando. Qual papel te atrai mais?",
+    options:[
+      ["Escutar as dificuldades das pessoas e ajudá-las a construir uma mudança possível.","S"],
+      ["Assumir a frente, criar adesão e impulsionar a mudança.","E"]
+    ]
+  },
+  "CS": {
+    q:"Pessoas diferentes precisam trabalhar juntas sem se perder. O que mais te interessa?",
+    options:[
+      ["Facilitar a comunicação para que todos se sintam compreendidos e incluídos.","S"],
+      ["Definir um processo claro para que cada pessoa saiba o que fazer e quando.","C"]
+    ]
+  },
+  "CE": {
+    q:"Um projeto começou a crescer rápido. Qual desafio parece mais interessante?",
+    options:[
+      ["Escolher prioridades, negociar caminhos e conduzir as próximas decisões.","E"],
+      ["Criar controles e uma estrutura para o crescimento continuar organizado.","C"]
+    ]
+  }
+};
+
+const areaModels = [
+  {
+    name:"Tecnologia e Computação",
+    desc:"Sistemas de Informação, Ciência da Computação, ADS, Engenharia de Software, Dados, IA, Cibersegurança e áreas digitais.",
+    weights:{I:.36,R:.22,C:.16,A:.10,E:.10,S:.06}
+  },
+  {
+    name:"Engenharias e Ciências Exatas",
+    desc:"Engenharias, Matemática, Física, Estatística, Química e formações centradas em análise, sistemas e solução de problemas.",
+    weights:{I:.34,R:.32,C:.16,E:.08,A:.05,S:.05}
+  },
+  {
+    name:"Saúde e Bem-Estar",
+    desc:"Medicina, Enfermagem, Odontologia, Fisioterapia, Farmácia, Nutrição, Educação Física e áreas de cuidado.",
+    weights:{S:.30,I:.28,R:.14,C:.12,E:.08,A:.08}
+  },
+  {
+    name:"Ciências Biológicas e Meio Ambiente",
+    desc:"Biologia, Biotecnologia, Ecologia, Ciências Ambientais e campos ligados à vida, pesquisa e natureza.",
+    weights:{I:.34,R:.26,S:.14,C:.10,A:.08,E:.08}
+  },
+  {
+    name:"Humanas e Ciências Sociais",
+    desc:"História, Filosofia, Sociologia, Geografia, Antropologia e áreas voltadas à compreensão da sociedade e da cultura.",
+    weights:{S:.25,I:.23,A:.17,E:.13,C:.12,R:.10}
+  },
+  {
+    name:"Comunicação, Artes e Design",
+    desc:"Design, Publicidade, Jornalismo, Cinema, Moda, Artes Visuais, Audiovisual e campos de criação e expressão.",
+    weights:{A:.36,E:.19,S:.16,I:.11,C:.10,R:.08}
+  },
+  {
+    name:"Negócios, Gestão e Economia",
+    desc:"Administração, Economia, Ciências Contábeis, Marketing, Logística e áreas de estratégia, organização e mercado.",
+    weights:{E:.31,C:.25,I:.15,S:.11,R:.09,A:.09}
+  },
+  {
+    name:"Direito, Sociedade e Relações Humanas",
+    desc:"Direito, Psicologia, Serviço Social, Relações Internacionais, Ciência Política e campos ligados a pessoas e sociedade.",
+    weights:{S:.26,E:.24,I:.16,C:.14,A:.11,R:.09}
+  }
+];
+
+let fixedIndex = 0;
+let adaptiveIndex = 0;
+let baseScores = {R:0,I:0,A:0,S:0,E:0,C:0};
+let adaptiveWins = {R:0,I:0,A:0,S:0,E:0,C:0};
+let adaptiveQuestions = [];
+let selectedTop3 = [];
+
+const intro = document.getElementById("intro");
+const quiz = document.getElementById("quiz");
+const adaptiveIntro = document.getElementById("adaptiveIntro");
+const result = document.getElementById("result");
+const qText = document.getElementById("questionText");
+const optionsEl = document.getElementById("options");
+const qNumber = document.getElementById("questionNumber");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const stageText = document.getElementById("stageText");
+
+document.getElementById("startBtn").onclick = start;
+document.getElementById("continueAdaptive").onclick = () => {
+  adaptiveIntro.classList.add("hidden");
+  quiz.classList.remove("hidden");
+  renderAdaptive();
+};
+document.getElementById("restartBtn").onclick = start;
+document.getElementById("debugBtn").onclick = () => {
+  document.getElementById("debugPanel").classList.toggle("hidden");
+};
+
+function start(){
+  fixedIndex = 0;
+  adaptiveIndex = 0;
+  baseScores = {R:0,I:0,A:0,S:0,E:0,C:0};
+  adaptiveWins = {R:0,I:0,A:0,S:0,E:0,C:0};
+  adaptiveQuestions = [];
+  selectedTop3 = [];
+  intro.classList.add("hidden");
+  result.classList.add("hidden");
+  adaptiveIntro.classList.add("hidden");
+  quiz.classList.remove("hidden");
+  document.getElementById("debugPanel").classList.add("hidden");
+  renderFixed();
+}
+
+function renderFixed(){
+  const item = fixedQuestions[fixedIndex];
+  updateProgress(fixedIndex + 1, false);
+  qNumber.textContent = `Questão ${String(fixedIndex+1).padStart(2,"0")}`;
+  qText.textContent = item.q;
+  renderOptions(item.options, dim => {
+    baseScores[dim] += 1;
+    fixedIndex++;
+    if(fixedIndex < fixedQuestions.length){
+      renderFixed();
+    } else {
+      prepareAdaptive();
+    }
+  });
+}
+
+function prepareAdaptive(){
+  const ranked = Object.entries(baseScores)
+    .sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
+  selectedTop3 = ranked.slice(0,3).map(x => x[0]);
+
+  const pairs = [
+    [selectedTop3[0], selectedTop3[1]],
+    [selectedTop3[0], selectedTop3[2]],
+    [selectedTop3[1], selectedTop3[2]]
+  ];
+
+  adaptiveQuestions = pairs.map(pair => {
+    const key = pair.slice().sort().join("");
+    return adaptiveBank[key];
+  });
+
+  quiz.classList.add("hidden");
+  adaptiveIntro.classList.remove("hidden");
+}
+
+function renderAdaptive(){
+  const item = adaptiveQuestions[adaptiveIndex];
+  const overallIndex = 12 + adaptiveIndex + 1;
+  updateProgress(overallIndex, true);
+  qNumber.textContent = `Questão ${String(overallIndex).padStart(2,"0")}`;
+  qText.textContent = item.q;
+  renderOptions(item.options, dim => {
+    adaptiveWins[dim] += 1;
+    adaptiveIndex++;
+    if(adaptiveIndex < adaptiveQuestions.length){
+      renderAdaptive();
+    } else {
+      showResults();
+    }
+  });
+}
+
+function renderOptions(options, onPick){
+  optionsEl.innerHTML = "";
+  const letters = ["A","B","C","D"];
+  options.forEach((opt, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="letter">${letters[idx]}</span><span>${opt[0]}</span>`;
+    btn.onclick = () => onPick(opt[1]);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function updateProgress(current, adaptive){
+  progressText.textContent = `${current} de 15`;
+  progressFill.style.width = `${(current/15)*100}%`;
+  stageText.textContent = adaptive ? "Etapa 2 · Refinando seu perfil" : "Etapa 1 · Explorando preferências";
+}
+
+function finalScores(){
+  const out = {};
+  for(const d of Object.keys(baseScores)){
+    out[d] = baseScores[d] + adaptiveWins[d]*0.35;
+  }
+  return out;
+}
+
+function areaScores(scores){
+  const max = Math.max(...Object.values(scores), 1);
+  const normalized = {};
+  Object.keys(scores).forEach(k => normalized[k] = scores[k]/max);
+
+  return areaModels.map(area => {
+    let total = 0;
+    for(const [dim,w] of Object.entries(area.weights)) total += normalized[dim]*w;
+    return {...area, score:total};
+  }).sort((a,b)=>b.score-a.score);
+}
+
+function showResults(){
+  quiz.classList.add("hidden");
+  result.classList.remove("hidden");
+
+  const scores = finalScores();
+  const max = Math.max(...Object.values(scores), 1);
+  const rankedDims = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const areas = areaScores(scores);
+  const top2 = areas.slice(0,2);
+
+  document.getElementById("topAreas").innerHTML = top2.map((a,i)=>`
+    <article class="area-card">
+      <div class="rank">${i+1}º</div>
+      <h3>${a.name}</h3>
+      <p>${a.desc}</p>
+    </article>
+  `).join("");
+
+  const d1 = rankedDims[0][0], d2 = rankedDims[1][0], d3 = rankedDims[2][0];
+  document.getElementById("whyBox").innerHTML = `
+    <strong>Por que essas áreas apareceram?</strong>
+    <p style="margin-top:7px">Seu perfil mostrou maior tendência para <b>${labels[d1]}</b> (${shortDescriptions[d1]}), acompanhada de <b>${labels[d2]}</b> (${shortDescriptions[d2]}) e <b>${labels[d3]}</b> (${shortDescriptions[d3]}). O MeuNorte cruza esse conjunto, e não apenas a maior pontuação, com os perfis das áreas acadêmicas.</p>
+  `;
+
+  document.getElementById("profileBars").innerHTML = rankedDims.map(([dim,val])=>{
+    const pct = Math.round((val/max)*100);
+    return `
+      <div class="bar-row">
+        <div class="label">${labels[dim]}</div>
+        <div class="mini-track"><div class="mini-fill" style="width:${pct}%"></div></div>
+        <div class="score">${pct}</div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("debugGrid").innerHTML = Object.keys(baseScores).map(dim=>`
+    <div class="debug-item">
+      <b>${labels[dim]}</b>
+      Base: ${baseScores[dim]} · Adaptativa: ${adaptiveWins[dim]} · Final: ${scores[dim].toFixed(2)}
+    </div>
+  `).join("");
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
